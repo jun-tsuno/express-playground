@@ -79,9 +79,9 @@ export const deleteTask = async (
 ): Promise<void> => {
 	await deleteTaskService(req.params.id);
 
-	const response: ApiResponse<null> = {
+	const response: ApiResponse<{ message: string }> = {
 		success: true,
-		data: null,
+		data: { message: "Task deleted successfully" },
 	};
 
 	res.status(200).json(response);
