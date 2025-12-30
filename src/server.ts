@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "dotenv/config";
-import app from "./app.js";
-import { AppDataSource } from "./db/data-source.js";
+import app from "@/app.js";
+import { AppDataSource } from "@/db/data-source.js";
 
 const PORT = process.env.PORT || 8888;
 

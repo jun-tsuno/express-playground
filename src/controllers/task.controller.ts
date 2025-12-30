@@ -5,15 +5,15 @@ import {
 	createTaskService,
 	updateTaskService,
 	deleteTaskService,
-} from "../services/task.service.js";
+} from "@/services/task.service.js";
 import type {
 	CreateTaskRequest,
 	UpdateTaskRequest,
 	GetTaskRequest,
 	DeleteTaskRequest,
-} from "../dto/task.js";
-import type { ApiResponse } from "../types/response.js";
-import type { Task } from "../db/entities/task.js";
+} from "@/dto/task.dto.js";
+import type { ApiResponse } from "@/types/response.js";
+import type { Task } from "@/db/entities/task.js";
 
 // タスク一覧を取得
 export const getTasks = async (_req: never, res: Response): Promise<void> => {

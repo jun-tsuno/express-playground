@@ -1,7 +1,7 @@
-import { AppDataSource } from "../db/data-source.js";
-import { Task } from "../db/entities/task.js";
-import { NotFoundError } from "../utils/errors.js";
-import type { CreateTaskDto, UpdateTaskDto } from "../dto/task.js";
+import { AppDataSource } from "@/db/data-source.js";
+import { Task } from "@/db/entities/task.js";
+import { NotFoundError } from "@/utils/errors.js";
+import type { CreateTaskDto, UpdateTaskDto } from "@/dto/task.dto.js";
 
 const taskRepository = AppDataSource.getRepository(Task);
 

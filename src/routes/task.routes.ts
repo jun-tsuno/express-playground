@@ -5,8 +5,8 @@ import {
 	postTask,
 	patchTask,
 	deleteTask,
-} from "../controllers/task.controller.js";
-import { asyncHandler } from "../utils/async-handler.js";
+} from "@/controllers/task.controller.js";
+import { asyncHandler } from "@/utils/async-handler.js";
 
 const router: RouterType = Router();
 

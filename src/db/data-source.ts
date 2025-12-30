@@ -2,8 +2,8 @@
 import { DataSource } from "typeorm";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { User } from "./entities/user.js";
-import { Task } from "./entities/task.js";
+import { User } from "@/db/entities/user.js";
+import { Task } from "@/db/entities/task.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

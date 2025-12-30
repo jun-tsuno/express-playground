@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { AppError } from "../utils/errors.js";
-import type { ApiResponse } from "../types/response.js";
+import { AppError } from "@/utils/errors.js";
+import type { ApiResponse } from "@/types/response.js";
 
 /**
  * グローバルエラーハンドリングミドルウェア
