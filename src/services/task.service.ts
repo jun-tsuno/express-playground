@@ -1,5 +1,6 @@
 import { AppDataSource } from "../db/data-source.js";
 import { Task } from "../db/entities/task.js";
+import type { CreateTaskDto, UpdateTaskDto } from "../dto/task.js";
 
 export const getTasksService = async (): Promise<Task[] | null> => {
 	try {
@@ -30,19 +31,15 @@ export const getTaskByIdService = async (id: string): Promise<Task | null> => {
 	}
 };
 
-export const createTaskService = async ({
-	title,
-	description,
-}: {
-	title: string;
-	description?: string;
-}): Promise<Task | null> => {
+export const createTaskService = async (
+	dto: CreateTaskDto
+): Promise<Task | null> => {
 	try {
 		const taskRepository = AppDataSource.getRepository(Task);
 		const task = new Task();
-		task.title = title;
-		task.description = description;
-		task.status = "TODO";
+		task.title = dto.title;
+		task.description = dto.description;
+		task.status = dto.status ?? "TODO";
 
 		const newTask = await taskRepository.save(task);
 		return newTask;
@@ -52,17 +49,10 @@ export const createTaskService = async ({
 	}
 };
 
-export const updateTaskService = async ({
-	id,
-	title,
-	description,
-	status,
-}: {
-	id: string;
-	title?: string;
-	description?: string;
-	status?: "TODO" | "DOING" | "DONE";
-}): Promise<Task | null> => {
+export const updateTaskService = async (
+	id: string,
+	dto: UpdateTaskDto
+): Promise<Task | null> => {
 	try {
 		const taskRepository = AppDataSource.getRepository(Task);
 		const task = await taskRepository.findOneBy({ id });
@@ -73,9 +63,7 @@ export const updateTaskService = async ({
 
 		const updatedTask = await taskRepository.save({
 			...task,
-			title,
-			description,
-			status,
+			...dto,
 		});
 
 		return updatedTask;

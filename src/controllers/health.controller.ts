@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { checkHealth } from "../services/health.service.js";
+import type { ApiResponse } from "../types/response.js";
 
 // ヘルスチェックコントローラー（HTTP リクエスト/レスポンス処理）
 export const getHealth = async (
@@ -8,17 +9,19 @@ export const getHealth = async (
 ): Promise<void> => {
 	try {
 		const health = await checkHealth();
-		res.status(200).json({
+		const response: ApiResponse<typeof health> = {
 			success: true,
 			data: health,
-		});
+		};
+		res.status(200).json(response);
 	} catch {
-		res.status(500).json({
+		const response: ApiResponse<never> = {
 			success: false,
 			error: {
 				code: "HEALTH_CHECK_FAILED",
 				message: "ヘルスチェックに失敗しました",
 			},
-		});
+		};
+		res.status(500).json(response);
 	}
 };
