@@ -1,0 +1,19 @@
+{
+   "compilerOptions": {
+      "lib": [
+         "es2022"
+      ],
+      "target": "es2022",
+      "module": "esnext",
+      "moduleResolution": "bundler",
+      "outDir": "./build",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "sourceMap": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "strict": true,
+      "strictPropertyInitialization": false,
+      "skipLibCheck": true
+   }
+}
