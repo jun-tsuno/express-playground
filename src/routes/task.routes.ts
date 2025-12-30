@@ -6,13 +6,14 @@ import {
 	patchTask,
 	deleteTask,
 } from "../controllers/task.controller.js";
+import { asyncHandler } from "../utils/async-handler.js";
 
 const router: RouterType = Router();
 
-router.get("/", getTasks);
-router.post("/", postTask);
-router.get("/:id", getTask);
-router.patch("/:id", patchTask);
-router.delete("/:id", deleteTask);
+router.get("/", asyncHandler(getTasks));
+router.post("/", asyncHandler(postTask));
+router.get("/:id", asyncHandler(getTask));
+router.patch("/:id", asyncHandler(patchTask));
+router.delete("/:id", asyncHandler(deleteTask));
 
 export default router;
