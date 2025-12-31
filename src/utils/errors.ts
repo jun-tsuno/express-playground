@@ -20,7 +20,11 @@ export class AppError extends Error {
 // 404 Not Found
 export class NotFoundError extends AppError {
 	constructor(resource: string) {
-		super(404, `${resource.toUpperCase()}_NOT_FOUND`, `${resource} not found`);
+		super(
+			404,
+			`${resource.toUpperCase()}_NOT_FOUND`,
+			`${resource}が見つかりません`
+		);
 		this.name = "NotFoundError";
 	}
 }
@@ -35,7 +39,7 @@ export class ValidationError extends AppError {
 
 // 401 Unauthorized
 export class UnauthorizedError extends AppError {
-	constructor(message = "Unauthorized") {
+	constructor(message = "認証エラーです") {
 		super(401, "UNAUTHORIZED", message);
 		this.name = "UnauthorizedError";
 	}
@@ -43,15 +47,27 @@ export class UnauthorizedError extends AppError {
 
 // 403 Forbidden
 export class ForbiddenError extends AppError {
-	constructor(message = "Forbidden") {
+	constructor(message = "権限がありません") {
 		super(403, "FORBIDDEN", message);
 		this.name = "ForbiddenError";
 	}
 }
 
+// 409 Conflict
+export class ConflictError extends AppError {
+	constructor(resource: string) {
+		super(
+			409,
+			`${resource.toUpperCase()}_CONFLICT`,
+			`${resource}が既に存在します`
+		);
+		this.name = "ConflictError";
+	}
+}
+
 // 500 Internal Server Error
 export class InternalServerError extends AppError {
-	constructor(message = "An unexpected error occurred") {
+	constructor(message = "予期せぬエラーが発生しました") {
 		super(500, "INTERNAL_SERVER_ERROR", message);
 		this.name = "InternalServerError";
 	}
