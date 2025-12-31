@@ -5,6 +5,7 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	ManyToOne,
+	JoinColumn,
 } from "typeorm";
 import { User } from "./user.js";
 
@@ -23,7 +24,11 @@ export class Task {
 	status: "TODO" | "DOING" | "DONE";
 
 	@ManyToOne(() => User)
+	@JoinColumn({ name: "ownerId" })
 	owner: User;
+
+	@Column("uuid", { nullable: true })
+	ownerId?: string;
 
 	@CreateDateColumn()
 	createdAt: Date;

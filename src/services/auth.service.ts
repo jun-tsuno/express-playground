@@ -19,14 +19,14 @@ export const registerService = async (dto: RegisterDto): Promise<string> => {
 	const hashedPassword = await bcrypt.hash(dto.password, 10);
 
 	// ユーザーの作成
-	await userRepository.save({
+	const createdUser = await userRepository.save({
 		name: dto.name,
 		email: dto.email,
 		passwordHash: hashedPassword,
 	});
 
 	// トークンの生成
-	const token = generateAccessToken(dto.email);
+	const token = generateAccessToken(createdUser.id, createdUser.email);
 
 	return token;
 };
@@ -47,7 +47,7 @@ export const loginService = async (dto: LoginDto): Promise<string> => {
 	}
 
 	// トークンの生成
-	const token = generateAccessToken(dto.email);
+	const token = generateAccessToken(user.id, user.email);
 
 	return token;
 };

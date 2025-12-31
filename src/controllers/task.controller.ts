@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Response, Request } from "express";
 import {
 	getTasksService,
 	getTaskByIdService,
@@ -16,8 +16,10 @@ import type { ApiResponse } from "@/types/response.js";
 import type { Task } from "@/db/entities/task.js";
 
 // タスク一覧を取得
-export const getTasks = async (_req: never, res: Response): Promise<void> => {
-	const tasks = await getTasksService();
+export const getTasks = async (req: Request, res: Response): Promise<void> => {
+	if (!req.user) return;
+
+	const tasks = await getTasksService(req.user);
 
 	const response: ApiResponse<Task[]> = {
 		success: true,
@@ -32,7 +34,9 @@ export const getTask = async (
 	req: GetTaskRequest,
 	res: Response
 ): Promise<void> => {
-	const task = await getTaskByIdService(req.params.id);
+	if (!req.user) return;
+
+	const task = await getTaskByIdService(req.user, req.params.id);
 
 	const response: ApiResponse<Task> = {
 		success: true,
@@ -47,7 +51,9 @@ export const postTask = async (
 	req: CreateTaskRequest,
 	res: Response
 ): Promise<void> => {
-	const task = await createTaskService(req.body);
+	if (!req.user) return;
+
+	const task = await createTaskService(req.user, req.body);
 
 	const response: ApiResponse<Task> = {
 		success: true,
@@ -62,7 +68,8 @@ export const patchTask = async (
 	req: UpdateTaskRequest,
 	res: Response
 ): Promise<void> => {
-	const task = await updateTaskService(req.params.id, req.body);
+	if (!req.user) return;
+	const task = await updateTaskService(req.user, req.params.id, req.body);
 
 	const response: ApiResponse<Task> = {
 		success: true,
@@ -77,7 +84,9 @@ export const deleteTask = async (
 	req: DeleteTaskRequest,
 	res: Response
 ): Promise<void> => {
-	await deleteTaskService(req.params.id);
+	if (!req.user) return;
+
+	await deleteTaskService(req.user, req.params.id);
 
 	const response: ApiResponse<{ message: string }> = {
 		success: true,

@@ -5,12 +5,17 @@ import type { CreateTaskDto, UpdateTaskDto } from "@/dto/task.dto.js";
 
 const taskRepository = AppDataSource.getRepository(Task);
 
-export const getTasksService = async (): Promise<Task[]> => {
-	return await taskRepository.find();
+export const getTasksService = async (userId: string): Promise<Task[]> => {
+	return await taskRepository.find({ where: { ownerId: userId } });
 };
 
-export const getTaskByIdService = async (id: string): Promise<Task> => {
-	const task = await taskRepository.findOneBy({ id });
+export const getTaskByIdService = async (
+	userId: string,
+	taskId: string
+): Promise<Task> => {
+	const task = await taskRepository.findOne({
+		where: { id: taskId, ownerId: userId },
+	});
 
 	if (!task) {
 		throw new NotFoundError("Task");
@@ -19,21 +24,28 @@ export const getTaskByIdService = async (id: string): Promise<Task> => {
 	return task;
 };
 
-export const createTaskService = async (dto: CreateTaskDto): Promise<Task> => {
+export const createTaskService = async (
+	userId: string,
+	dto: CreateTaskDto
+): Promise<Task> => {
 	const task = taskRepository.create({
 		title: dto.title,
 		description: dto.description,
 		status: dto.status ?? "TODO",
+		ownerId: userId,
 	});
 
 	return await taskRepository.save(task);
 };
 
 export const updateTaskService = async (
-	id: string,
+	userId: string,
+	taskId: string,
 	dto: UpdateTaskDto
 ): Promise<Task> => {
-	const task = await taskRepository.findOneBy({ id });
+	const task = await taskRepository.findOne({
+		where: { id: taskId, ownerId: userId },
+	});
 
 	if (!task) {
 		throw new NotFoundError("Task");
@@ -42,12 +54,17 @@ export const updateTaskService = async (
 	return await taskRepository.save({ ...task, ...dto });
 };
 
-export const deleteTaskService = async (id: string): Promise<void> => {
-	const task = await taskRepository.findOneBy({ id });
+export const deleteTaskService = async (
+	userId: string,
+	taskId: string
+): Promise<void> => {
+	const task = await taskRepository.findOne({
+		where: { id: taskId, ownerId: userId },
+	});
 
 	if (!task) {
 		throw new NotFoundError("Task");
 	}
 
-	await taskRepository.delete(id);
+	await taskRepository.delete(taskId);
 };
