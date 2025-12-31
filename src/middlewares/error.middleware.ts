@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { AppError } from "@/utils/errors.js";
+import { AppError, InternalServerError } from "@/utils/errors.js";
 import type { ApiResponse } from "@/types/response.js";
 
 /**
@@ -26,18 +26,19 @@ export const errorHandler = (
 		return;
 	}
 
-	// 想定外エラー（500 Internal Server Error）
+	// 想定外エラー → InternalServerErrorに変換
 	console.error("Unexpected error:", error);
+
+	const internalError = new InternalServerError(
+		process.env.NODE_ENV === "production" ? undefined : error.message
+	);
 
 	const response: ApiResponse<never> = {
 		success: false,
 		error: {
-			code: "INTERNAL_SERVER_ERROR",
-			message:
-				process.env.NODE_ENV === "production"
-					? "An unexpected error occurred"
-					: error.message,
+			code: internalError.code,
+			message: internalError.message,
 		},
 	};
-	res.status(500).json(response);
+	res.status(internalError.statusCode).json(response);
 };

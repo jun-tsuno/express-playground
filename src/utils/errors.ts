@@ -48,3 +48,11 @@ export class ForbiddenError extends AppError {
 		this.name = "ForbiddenError";
 	}
 }
+
+// 500 Internal Server Error
+export class InternalServerError extends AppError {
+	constructor(message = "An unexpected error occurred") {
+		super(500, "INTERNAL_SERVER_ERROR", message);
+		this.name = "InternalServerError";
+	}
+}
