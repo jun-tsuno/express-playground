@@ -9,11 +9,13 @@ export const checkTokenMiddleware = (
 	_res: Response,
 	next: NextFunction
 ): void => {
-	const token = req.header("x-auth-token");
+	const authHeader = req.header("Authorization");
 
-	if (!token) {
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
 		throw new UnauthorizedError("権限がありません");
 	}
+
+	const token = authHeader.slice(7);
 
 	try {
 		const decoded = jwt.verify(
