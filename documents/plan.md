@@ -2,71 +2,83 @@
 
 ## ステップ 1: プロジェクトセットアップ
 
-- プロジェクト初期化（package.json, tsconfig.json, ESLint, Prettier）
-- 依存パッケージインストール
-- ディレクトリ構造作成
+- [x] プロジェクト初期化（package.json, tsconfig.json, ESLint, Prettier）
+- [x] 依存パッケージインストール
+- [x] ディレクトリ構造作成
 
 ---
 
 ## ステップ 2: 基本設定とユーティリティ
 
-- 環境変数管理
-- 型定義（Express Request 拡張、DTO）
-- ユーティリティ関数（errors, response, password, jwt, logger）
+- [x] 環境変数管理
+- [x] 型定義（Express Request 拡張、DTO）
+- [ ] ユーティリティ関数（errors, response, password, jwt, logger）
+  - [x] errors
+  - [x] response
+  - [x] password
+  - [x] jwt
+  - [ ] logger
 
 ---
 
 ## ステップ 3: データベース設定
 
-- TypeORM 設定
-- エンティティ作成（User, Task）
-- マイグレーション作成・実行
+- [x] TypeORM 設定
+- [x] エンティティ作成（User, Task）
+- [x] マイグレーション作成・実行
 
 ---
 
 ## ステップ 4: ミドルウェア実装
 
-- セキュリティミドルウェア（Helmet, CORS, Rate Limit）
-- リクエスト ID ミドルウェア
-- バリデーションミドルウェア
-- エラーハンドリングミドルウェア
+- [ ] セキュリティミドルウェア（Helmet, CORS, Rate Limit）
+  - [ ] Helmet
+  - [x] CORS
+  - [ ] Rate Limit
+- [ ] リクエスト ID ミドルウェア
+- [x] バリデーションミドルウェア
+- [x] エラーハンドリングミドルウェア
 
 ---
 
 ## ステップ 5: 認証機能実装
 
-- 認証サービス（register, login, refresh, logout）
-- 認証リポジトリ（任意）
-- 認証コントローラー
-- 認証ルート
-- 認証ミドルウェア（JWT 検証）
+- [ ] 認証サービス（register, login, refresh, logout）
+  - [x] register
+  - [x] login
+  - [ ] refresh
+  - [ ] logout
+- [ ] 認証リポジトリ（任意）
+- [x] 認証コントローラー
+- [x] 認証ルート
+- [x] 認証ミドルウェア（JWT 検証）
 
 ---
 
 ## ステップ 6: Task CRUD 機能実装
 
-- Task サービス（create, findAll, findOne, update, delete）
-- Task リポジトリ（任意）
-- Task コントローラー
-- Task ルート
+- [x] Task サービス（create, findAll, findOne, update, delete）
+- [ ] Task リポジトリ（任意）
+- [x] Task コントローラー
+- [x] Task ルート
 
 ---
 
 ## ステップ 7: アプリケーション統合
 
-- メインアプリケーション（app.ts）
-- ルーティング統合（routes/index.ts）
-- サーバー起動（server.ts）
-- ヘルスチェックエンドポイント（任意）
+- [x] メインアプリケーション（app.ts）
+- [x] ルーティング統合（routes/index.ts）
+- [x] サーバー起動（server.ts）
+- [ ] ヘルスチェックエンドポイント（任意）
 
 ---
 
 ## ステップ 8: 最終調整とテスト
 
-- バリデーション実装
-- エラーハンドリング確認
-- セキュリティ確認
-- 動作確認
+- [x] バリデーション実装
+- [ ] エラーハンドリング確認
+- [ ] セキュリティ確認
+- [ ] 動作確認
 
 ---
 
