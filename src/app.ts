@@ -2,10 +2,12 @@ import express, { type Express } from "express";
 import routes from "@/routes/index.js";
 import { errorHandler } from "@/middlewares/error.middleware.js";
 import cors from "cors";
+import helmet from "helmet";
 
 const app: Express = express();
 
 // ミドルウェア設定
+app.use(helmet());
 app.use(express.json());
 app.use(
 	cors({
