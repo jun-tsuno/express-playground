@@ -11,9 +11,14 @@ export interface LoginDto {
 	password: string;
 }
 
+export interface RefreshDto {
+	refreshToken: string;
+}
+
 export type RegisterRequest = Request<
 	Record<string, never>,
 	never,
 	RegisterDto
 >;
 export type LoginRequest = Request<Record<string, never>, never, LoginDto>;
+export type RefreshRequest = Request<Record<string, never>, never, RefreshDto>;

@@ -16,3 +16,7 @@ export const loginValidator = [
 		.withMessage("メールアドレスは有効な形式で入力してください"),
 	body("password").notEmpty().withMessage("パスワードは必須です"),
 ];
+
+export const refreshValidator = [
+	body("refreshToken").notEmpty().withMessage("リフレッシュトークンは必須です"),
+];

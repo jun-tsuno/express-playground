@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "@/utils/errors";
-import jwt from "jsonwebtoken";
-import type { JwtPayload } from "jsonwebtoken";
+import { verifyAccessToken } from "@/utils/auth";
 
 // 認証ミドルウェア（JWT 検証）
 export const checkTokenMiddleware = (
@@ -18,11 +17,7 @@ export const checkTokenMiddleware = (
 	const token = authHeader.slice(7);
 
 	try {
-		const decoded = jwt.verify(
-			token,
-			process.env.JWT_SECRET as string
-		) as JwtPayload;
-
+		const decoded = verifyAccessToken(token);
 		req.user = decoded.userId;
 
 		next();

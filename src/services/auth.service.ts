@@ -1,13 +1,19 @@
 import { User } from "@/db/entities/user";
-import type { LoginDto, RegisterDto } from "@/dto/auth.dto";
+import type { LoginDto, RegisterDto, RefreshDto } from "@/dto/auth.dto";
 import { AppDataSource } from "@/db/data-source";
 import { ConflictError, NotFoundError } from "@/utils/errors";
 import bcrypt from "bcrypt";
 import { UnauthorizedError } from "@/utils/errors";
-import { generateAccessToken } from "@/utils/auth";
+import {
+	generateAccessToken,
+	generateRefreshToken,
+	verifyRefreshToken,
+} from "@/utils/auth";
 
 // 新規登録
-export const registerService = async (dto: RegisterDto): Promise<string> => {
+export const registerService = async (
+	dto: RegisterDto
+): Promise<{ token: string; refreshToken: string }> => {
 	const userRepository = AppDataSource.getRepository(User);
 	const user = await userRepository.findOneBy({ email: dto.email });
 
@@ -27,12 +33,15 @@ export const registerService = async (dto: RegisterDto): Promise<string> => {
 
 	// トークンの生成
 	const token = generateAccessToken(createdUser.id, createdUser.email);
+	const refreshToken = generateRefreshToken(createdUser.id, createdUser.email);
 
-	return token;
+	return { token, refreshToken };
 };
 
 // ログイン
-export const loginService = async (dto: LoginDto): Promise<string> => {
+export const loginService = async (
+	dto: LoginDto
+): Promise<{ token: string; refreshToken: string }> => {
 	const userRepository = AppDataSource.getRepository(User);
 	const user = await userRepository.findOneBy({ email: dto.email });
 
@@ -48,6 +57,26 @@ export const loginService = async (dto: LoginDto): Promise<string> => {
 
 	// トークンの生成
 	const token = generateAccessToken(user.id, user.email);
+	const refreshToken = generateRefreshToken(user.id, user.email);
 
-	return token;
+	return { token, refreshToken };
+};
+
+// リフレッシュトークンの検証
+export const refreshService = (
+	dto: RefreshDto
+): { token: string; refreshToken: string } => {
+	const { refreshToken } = dto;
+
+	try {
+		const decoded = verifyRefreshToken(refreshToken);
+
+		// 新しいトークンとリフレッシュトークンの生成
+		const token = generateAccessToken(decoded.userId, decoded.email);
+		const newRefreshToken = generateRefreshToken(decoded.userId, decoded.email);
+
+		return { token, refreshToken: newRefreshToken };
+	} catch {
+		throw new UnauthorizedError("無効なリフレッシュトークンです");
+	}
 };
