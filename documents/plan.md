@@ -32,7 +32,7 @@
 ## ステップ 4: ミドルウェア実装
 
 - [ ] セキュリティミドルウェア（Helmet, CORS, Rate Limit）
-  - [ ] Helmet
+  - [x] Helmet
   - [x] CORS
   - [ ] Rate Limit
 - [ ] リクエスト ID ミドルウェア
@@ -46,7 +46,7 @@
 - [ ] 認証サービス（register, login, refresh, logout）
   - [x] register
   - [x] login
-  - [ ] refresh
+  - [x] refresh
   - [ ] logout
 - [ ] 認証リポジトリ（任意）
 - [x] 認証コントローラー
@@ -82,6 +82,22 @@
 
 ---
 
+## ステップ 9: 認証セキュリティ強化
+
+- [ ] トークンの受け渡しを cookie ベース（httpOnly）に変更
+  - [ ] cookie-parser ミドルウェア導入
+  - [ ] login/register でトークンを httpOnly cookie に設定
+  - [ ] auth.middleware でトークンを cookie から取得するよう変更
+  - [ ] CORS の credentials 設定を有効化
+- [ ] リフレッシュトークンの DB 管理
+  - [ ] User エンティティに refreshToken カラムを追加
+  - [ ] マイグレーション作成・実行
+  - [ ] login/register 時に refreshToken を DB に保存
+  - [ ] refresh 時に DB のトークンと照合
+  - [ ] logout 時に DB の refreshToken を削除（無効化）
+
+---
+
 ## 実装の優先順位
 
 ### 必須（最低限の動作）
@@ -96,7 +112,7 @@
 
 ### 推奨（機能強化）
 
-- リフレッシュトークン機能
+- ステップ 9: 認証セキュリティ強化（cookie ベース、DB 管理）
 - ページネーション、ソート、フィルタ
 - ソフトデリート
 - ログ管理（pino）
