@@ -8,13 +8,18 @@ export const checkTokenMiddleware = (
 	_res: Response,
 	next: NextFunction
 ): void => {
-	const authHeader = req.header("Authorization");
+	// ヘッダーからトークンを取得する場合
+	// const authHeader = req.header("Authorization");
+	// if (!authHeader || !authHeader.startsWith("Bearer ")) {
+	// 	throw new UnauthorizedError("権限がありません");
+	// }
+	// const token = authHeader.slice(7);
 
-	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+	const token = req.cookies?.token;
+
+	if (!token) {
 		throw new UnauthorizedError("権限がありません");
 	}
-
-	const token = authHeader.slice(7);
 
 	try {
 		const decoded = verifyAccessToken(token);

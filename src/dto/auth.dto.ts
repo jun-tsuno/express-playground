@@ -21,4 +21,3 @@ export type RegisterRequest = Request<
 	RegisterDto
 >;
 export type LoginRequest = Request<Record<string, never>, never, LoginDto>;
-export type RefreshRequest = Request<Record<string, never>, never, RefreshDto>;

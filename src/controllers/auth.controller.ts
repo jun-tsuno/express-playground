@@ -1,26 +1,24 @@
-import type { Response } from "express";
-import type {
-	LoginRequest,
-	RegisterRequest,
-	RefreshRequest,
-} from "@/dto/auth.dto";
+import type { Response, Request } from "express";
+import type { LoginRequest, RegisterRequest } from "@/dto/auth.dto";
 import {
 	registerService,
 	loginService,
 	refreshService,
 } from "@/services/auth.service";
 import type { ApiResponse } from "@/types/response";
+import { UnauthorizedError } from "@/utils/errors";
+import { tokenCookie, refreshTokenCookie } from "@/utils/auth";
 
 // 新規登録
 export const postRegister = async (
 	req: RegisterRequest,
 	res: Response
 ): Promise<void> => {
-	const { token, refreshToken } = await registerService(req.body);
+	await registerService(req.body);
 
-	const response: ApiResponse<{ token: string; refreshToken: string }> = {
+	const response: ApiResponse<null> = {
 		success: true,
-		data: { token, refreshToken },
+		data: null,
 	};
 
 	res.status(201).json(response);
@@ -33,9 +31,13 @@ export const postLogin = async (
 ): Promise<void> => {
 	const { token, refreshToken } = await loginService(req.body);
 
-	const response: ApiResponse<{ token: string; refreshToken: string }> = {
+	// httpOnlyにcookieを設定
+	res.cookie(tokenCookie.key, token, tokenCookie.options);
+	res.cookie(refreshTokenCookie.key, refreshToken, refreshTokenCookie.options);
+
+	const response: ApiResponse<null> = {
 		success: true,
-		data: { token, refreshToken },
+		data: null,
 	};
 
 	res.status(200).json(response);
@@ -43,14 +45,24 @@ export const postLogin = async (
 
 // リフレッシュトークン
 export const postRefresh = async (
-	req: RefreshRequest,
+	req: Request,
 	res: Response
 ): Promise<void> => {
-	const { token, refreshToken } = refreshService(req.body);
+	const oldRefreshToken = req.cookies?.refreshToken;
 
-	const response: ApiResponse<{ token: string; refreshToken: string }> = {
+	if (!oldRefreshToken) {
+		throw new UnauthorizedError("リフレッシュトークンが見つかりません");
+	}
+
+	const { token, refreshToken } = refreshService(oldRefreshToken);
+
+	// httpOnlyにcookieを設定
+	res.cookie(tokenCookie.key, token, tokenCookie.options);
+	res.cookie(refreshTokenCookie.key, refreshToken, refreshTokenCookie.options);
+
+	const response: ApiResponse<null> = {
 		success: true,
-		data: { token, refreshToken },
+		data: null,
 	};
 
 	res.status(200).json(response);

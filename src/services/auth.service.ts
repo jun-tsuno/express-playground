@@ -1,5 +1,5 @@
 import { User } from "@/db/entities/user";
-import type { LoginDto, RegisterDto, RefreshDto } from "@/dto/auth.dto";
+import type { LoginDto, RegisterDto } from "@/dto/auth.dto";
 import { AppDataSource } from "@/db/data-source";
 import { ConflictError, NotFoundError } from "@/utils/errors";
 import bcrypt from "bcrypt";
@@ -11,9 +11,7 @@ import {
 } from "@/utils/auth";
 
 // 新規登録
-export const registerService = async (
-	dto: RegisterDto
-): Promise<{ token: string; refreshToken: string }> => {
+export const registerService = async (dto: RegisterDto): Promise<void> => {
 	const userRepository = AppDataSource.getRepository(User);
 	const user = await userRepository.findOneBy({ email: dto.email });
 
@@ -25,17 +23,11 @@ export const registerService = async (
 	const hashedPassword = await bcrypt.hash(dto.password, 10);
 
 	// ユーザーの作成
-	const createdUser = await userRepository.save({
+	await userRepository.save({
 		name: dto.name,
 		email: dto.email,
 		passwordHash: hashedPassword,
 	});
-
-	// トークンの生成
-	const token = generateAccessToken(createdUser.id, createdUser.email);
-	const refreshToken = generateRefreshToken(createdUser.id, createdUser.email);
-
-	return { token, refreshToken };
 };
 
 // ログイン
@@ -64,10 +56,8 @@ export const loginService = async (
 
 // リフレッシュトークンの検証
 export const refreshService = (
-	dto: RefreshDto
+	refreshToken: string
 ): { token: string; refreshToken: string } => {
-	const { refreshToken } = dto;
-
 	try {
 		const decoded = verifyRefreshToken(refreshToken);
 
