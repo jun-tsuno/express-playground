@@ -6,7 +6,7 @@ import {
 	refreshService,
 } from "@/services/auth.service";
 import type { ApiResponse } from "@/types/response";
-import { UnauthorizedError } from "@/utils/errors";
+import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors";
 import { tokenCookie, refreshTokenCookie } from "@/utils/auth";
 
 // 新規登録
@@ -16,9 +16,9 @@ export const postRegister = async (
 ): Promise<void> => {
 	await registerService(req.body);
 
-	const response: ApiResponse<null> = {
+	const response: ApiResponse<{ message: string }> = {
 		success: true,
-		data: null,
+		data: { message: "ユーザーを登録しました" },
 	};
 
 	res.status(201).json(response);
@@ -35,9 +35,9 @@ export const postLogin = async (
 	res.cookie(tokenCookie.key, token, tokenCookie.options);
 	res.cookie(refreshTokenCookie.key, refreshToken, refreshTokenCookie.options);
 
-	const response: ApiResponse<null> = {
+	const response: ApiResponse<{ message: string }> = {
 		success: true,
-		data: null,
+		data: { message: "ログインしました" },
 	};
 
 	res.status(200).json(response);
@@ -51,7 +51,7 @@ export const postRefresh = async (
 	const oldRefreshToken = req.cookies?.refreshToken;
 
 	if (!oldRefreshToken) {
-		throw new UnauthorizedError("リフレッシュトークンが見つかりません");
+		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.DEFAULT);
 	}
 
 	const { token, refreshToken } = refreshService(oldRefreshToken);
@@ -60,9 +60,25 @@ export const postRefresh = async (
 	res.cookie(tokenCookie.key, token, tokenCookie.options);
 	res.cookie(refreshTokenCookie.key, refreshToken, refreshTokenCookie.options);
 
-	const response: ApiResponse<null> = {
+	const response: ApiResponse<{ message: string }> = {
 		success: true,
-		data: null,
+		data: { message: "トークンを更新しました" },
+	};
+
+	res.status(200).json(response);
+};
+
+// ログアウト
+export const postLogout = async (
+	_req: Request,
+	res: Response
+): Promise<void> => {
+	res.clearCookie(tokenCookie.key);
+	res.clearCookie(refreshTokenCookie.key);
+
+	const response: ApiResponse<{ message: string }> = {
+		success: true,
+		data: { message: "ログアウトしました" },
 	};
 
 	res.status(200).json(response);

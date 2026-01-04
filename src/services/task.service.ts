@@ -1,6 +1,6 @@
 import { AppDataSource } from "@/db/data-source.js";
 import { Task } from "@/db/entities/task.js";
-import { NotFoundError } from "@/utils/errors.js";
+import { NotFoundError, TASK_ERROR_MESSAGE } from "@/utils/errors.js";
 import type { CreateTaskDto, UpdateTaskDto } from "@/dto/task.dto.js";
 
 const taskRepository = AppDataSource.getRepository(Task);
@@ -18,7 +18,7 @@ export const getTaskByIdService = async (
 	});
 
 	if (!task) {
-		throw new NotFoundError("Task");
+		throw new NotFoundError(TASK_ERROR_MESSAGE.NOT_FOUND);
 	}
 
 	return task;
@@ -48,7 +48,7 @@ export const updateTaskService = async (
 	});
 
 	if (!task) {
-		throw new NotFoundError("Task");
+		throw new NotFoundError(TASK_ERROR_MESSAGE.NOT_FOUND);
 	}
 
 	return await taskRepository.save({ ...task, ...dto });
@@ -63,7 +63,7 @@ export const deleteTaskService = async (
 	});
 
 	if (!task) {
-		throw new NotFoundError("Task");
+		throw new NotFoundError(TASK_ERROR_MESSAGE.NOT_FOUND);
 	}
 
 	await taskRepository.delete(taskId);

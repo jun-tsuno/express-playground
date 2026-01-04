@@ -4,6 +4,7 @@ import {
 	postRegister,
 	postLogin,
 	postRefresh,
+	postLogout,
 } from "@/controllers/auth.controller";
 import {
 	registerValidator,
@@ -24,5 +25,7 @@ router.post(
 router.post("/login", loginValidator, validate, asyncHandler(postLogin));
 
 router.post("/refresh", refreshValidator, validate, asyncHandler(postRefresh));
+
+router.post("/logout", asyncHandler(postLogout));
 
 export default router;

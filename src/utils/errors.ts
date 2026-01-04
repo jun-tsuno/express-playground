@@ -1,3 +1,14 @@
+export const AUTH_ERROR_MESSAGE = {
+	DEFAULT: "無効な認証情報です",
+	UNAUTHORIZED: "権限がありません",
+	CONFLICT: "ユーザーが既に存在します",
+	NOT_FOUND: "ユーザーが見つかりません",
+};
+
+export const TASK_ERROR_MESSAGE = {
+	NOT_FOUND: "タスクが見つかりません",
+};
+
 /**
  * カスタムエラークラス
  * アプリケーション全体で統一されたエラーハンドリングを実現
@@ -19,12 +30,8 @@ export class AppError extends Error {
 
 // 404 Not Found
 export class NotFoundError extends AppError {
-	constructor(resource: string) {
-		super(
-			404,
-			`${resource.toUpperCase()}_NOT_FOUND`,
-			`${resource}が見つかりません`
-		);
+	constructor(message: string) {
+		super(404, "NOT_FOUND", message);
 		this.name = "NotFoundError";
 	}
 }
@@ -40,7 +47,7 @@ export class ValidationError extends AppError {
 // 401 Unauthorized
 export class UnauthorizedError extends AppError {
 	constructor(message = "認証エラーです") {
-		super(401, "UNAUTHORIZED", message);
+		super(401, "UNAUTHORIZED_ERROR", message);
 		this.name = "UnauthorizedError";
 	}
 }
@@ -48,19 +55,15 @@ export class UnauthorizedError extends AppError {
 // 403 Forbidden
 export class ForbiddenError extends AppError {
 	constructor(message = "権限がありません") {
-		super(403, "FORBIDDEN", message);
+		super(403, "FORBIDDEN_ERROR", message);
 		this.name = "ForbiddenError";
 	}
 }
 
 // 409 Conflict
 export class ConflictError extends AppError {
-	constructor(resource: string) {
-		super(
-			409,
-			`${resource.toUpperCase()}_CONFLICT`,
-			`${resource}が既に存在します`
-		);
+	constructor(message: string) {
+		super(409, "CONFLICT_ERROR", message);
 		this.name = "ConflictError";
 	}
 }

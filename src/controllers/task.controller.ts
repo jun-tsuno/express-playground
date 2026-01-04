@@ -90,7 +90,7 @@ export const deleteTask = async (
 
 	const response: ApiResponse<{ message: string }> = {
 		success: true,
-		data: { message: "Task deleted successfully" },
+		data: { message: "タスクを削除しました" },
 	};
 
 	res.status(200).json(response);

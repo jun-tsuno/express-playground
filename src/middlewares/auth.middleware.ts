@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { UnauthorizedError } from "@/utils/errors";
+import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors";
 import { verifyAccessToken } from "@/utils/auth";
 
 // 認証ミドルウェア（JWT 検証）
@@ -18,7 +18,7 @@ export const checkTokenMiddleware = (
 	const token = req.cookies?.token;
 
 	if (!token) {
-		throw new UnauthorizedError("権限がありません");
+		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.UNAUTHORIZED);
 	}
 
 	try {
@@ -27,6 +27,6 @@ export const checkTokenMiddleware = (
 
 		next();
 	} catch {
-		throw new UnauthorizedError("権限がありません");
+		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.UNAUTHORIZED);
 	}
 };

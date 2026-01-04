@@ -3,7 +3,7 @@ import type { LoginDto, RegisterDto } from "@/dto/auth.dto";
 import { AppDataSource } from "@/db/data-source";
 import { ConflictError, NotFoundError } from "@/utils/errors";
 import bcrypt from "bcrypt";
-import { UnauthorizedError } from "@/utils/errors";
+import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors";
 import {
 	generateAccessToken,
 	generateRefreshToken,
@@ -16,7 +16,7 @@ export const registerService = async (dto: RegisterDto): Promise<void> => {
 	const user = await userRepository.findOneBy({ email: dto.email });
 
 	if (user) {
-		throw new ConflictError("User");
+		throw new ConflictError(AUTH_ERROR_MESSAGE.CONFLICT);
 	}
 
 	// パスワードの暗号化
@@ -38,13 +38,13 @@ export const loginService = async (
 	const user = await userRepository.findOneBy({ email: dto.email });
 
 	if (!user) {
-		throw new NotFoundError("User");
+		throw new NotFoundError(AUTH_ERROR_MESSAGE.NOT_FOUND);
 	}
 
 	// パスワード検証
 	const isMatch = await bcrypt.compare(dto.password, user.passwordHash);
 	if (!isMatch) {
-		throw new UnauthorizedError("無効な認証情報です");
+		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.DEFAULT);
 	}
 
 	// トークンの生成
@@ -67,6 +67,6 @@ export const refreshService = (
 
 		return { token, refreshToken: newRefreshToken };
 	} catch {
-		throw new UnauthorizedError("無効なリフレッシュトークンです");
+		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.DEFAULT);
 	}
 };
