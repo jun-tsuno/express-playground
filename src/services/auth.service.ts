@@ -10,9 +10,10 @@ import {
 	verifyRefreshToken,
 } from "@/utils/auth";
 
+const userRepository = AppDataSource.getRepository(User);
+
 // 新規登録
 export const registerService = async (dto: RegisterDto): Promise<void> => {
-	const userRepository = AppDataSource.getRepository(User);
 	const user = await userRepository.findOneBy({ email: dto.email });
 
 	if (user) {
@@ -34,7 +35,6 @@ export const registerService = async (dto: RegisterDto): Promise<void> => {
 export const loginService = async (
 	dto: LoginDto
 ): Promise<{ token: string; refreshToken: string }> => {
-	const userRepository = AppDataSource.getRepository(User);
 	const user = await userRepository.findOneBy({ email: dto.email });
 
 	if (!user) {
