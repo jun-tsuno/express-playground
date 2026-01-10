@@ -1,14 +1,14 @@
-import { User } from "@/db/entities/user";
-import type { LoginDto, RegisterDto } from "@/dto/auth.dto";
-import { AppDataSource } from "@/db/data-source";
-import { ConflictError, NotFoundError } from "@/utils/errors";
+import { User } from "@/db/entities/user.js";
+import type { LoginDto, RegisterDto } from "@/dto/auth.dto.js";
+import { AppDataSource } from "@/db/data-source.js";
+import { ConflictError, NotFoundError } from "@/utils/errors.js";
 import bcrypt from "bcrypt";
-import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors";
+import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors.js";
 import {
 	generateAccessToken,
 	generateRefreshToken,
 	verifyRefreshToken,
-} from "@/utils/auth";
+} from "@/utils/auth.js";
 
 const userRepository = AppDataSource.getRepository(User);
 

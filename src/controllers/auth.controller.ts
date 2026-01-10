@@ -1,13 +1,13 @@
 import type { Response, Request } from "express";
-import type { LoginRequest, RegisterRequest } from "@/dto/auth.dto";
+import type { LoginRequest, RegisterRequest } from "@/dto/auth.dto.js";
 import {
 	registerService,
 	loginService,
 	refreshService,
-} from "@/services/auth.service";
-import type { ApiResponse } from "@/types/response";
-import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors";
-import { tokenCookie, refreshTokenCookie } from "@/utils/auth";
+} from "@/services/auth.service.js";
+import type { ApiResponse } from "@/types/response.js";
+import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors.js";
+import { tokenCookie, refreshTokenCookie } from "@/utils/auth.js";
 
 // 新規登録
 export const postRegister = async (

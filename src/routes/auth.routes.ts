@@ -1,17 +1,17 @@
 import { Router, type Router as RouterType } from "express";
-import { asyncHandler } from "@/utils/async-handler";
+import { asyncHandler } from "@/utils/async-handler.js";
 import {
 	postRegister,
 	postLogin,
 	postRefresh,
 	postLogout,
-} from "@/controllers/auth.controller";
+} from "@/controllers/auth.controller.js";
 import {
 	registerValidator,
 	loginValidator,
 	refreshValidator,
-} from "@/validators/auth.validator";
-import { validate } from "@/middlewares/validate.middleware";
+} from "@/validators/auth.validator.js";
+import { validate } from "@/middlewares/validate.middleware.js";
 
 const router: RouterType = Router();
 

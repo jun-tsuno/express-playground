@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors";
-import { verifyAccessToken } from "@/utils/auth";
+import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors.js";
+import { verifyAccessToken } from "@/utils/auth.js";
 
 // 認証ミドルウェア（JWT 検証）
 export const checkTokenMiddleware = (

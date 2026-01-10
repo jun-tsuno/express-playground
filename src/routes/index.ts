@@ -1,7 +1,7 @@
 // ルーティング統合
 import { Router, type Router as RouterType } from "express";
-import taskRoutes from "@/routes/task.routes";
-import authRoutes from "@/routes/auth.routes";
+import taskRoutes from "@/routes/task.routes.js";
+import authRoutes from "@/routes/auth.routes.js";
 
 const router: RouterType = Router();
 
