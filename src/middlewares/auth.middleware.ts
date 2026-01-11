@@ -21,12 +21,12 @@ export const checkTokenMiddleware = (
 		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.UNAUTHORIZED);
 	}
 
-	try {
-		const decoded = verifyAccessToken(token);
-		req.user = decoded.userId;
-
-		next();
-	} catch {
-		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.UNAUTHORIZED);
+	const result = verifyAccessToken(token);
+	if (!result.success) {
+		throw new UnauthorizedError(result.error);
 	}
+
+	req.user = result.payload.userId;
+
+	next();
 };

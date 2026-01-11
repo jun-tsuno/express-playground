@@ -54,19 +54,24 @@ export const loginService = async (
 	return { token, refreshToken };
 };
 
-// リフレッシュトークンの検証
+// リフレッシュトークンの検証と生成
 export const refreshService = (
 	refreshToken: string
 ): { token: string; refreshToken: string } => {
-	try {
-		const decoded = verifyRefreshToken(refreshToken);
+	const result = verifyRefreshToken(refreshToken);
 
-		// 新しいトークンとリフレッシュトークンの生成
-		const token = generateAccessToken(decoded.userId, decoded.email);
-		const newRefreshToken = generateRefreshToken(decoded.userId, decoded.email);
-
-		return { token, refreshToken: newRefreshToken };
-	} catch {
-		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.DEFAULT);
+	if (!result.success) {
+		throw new UnauthorizedError(result.error);
 	}
+
+	const token = generateAccessToken(
+		result.payload.userId,
+		result.payload.email
+	);
+	const newRefreshToken = generateRefreshToken(
+		result.payload.userId,
+		result.payload.email
+	);
+
+	return { token, refreshToken: newRefreshToken };
 };

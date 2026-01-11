@@ -43,7 +43,7 @@ export const postLogin = async (
 	res.status(200).json(response);
 };
 
-// リフレッシュトークン
+// リフレッシュトークンを更新
 export const postRefresh = async (
 	req: Request,
 	res: Response

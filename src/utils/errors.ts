@@ -3,6 +3,7 @@ export const AUTH_ERROR_MESSAGE = {
 	UNAUTHORIZED: "権限がありません",
 	CONFLICT: "ユーザーが既に存在します",
 	NOT_FOUND: "ユーザーが見つかりません",
+	EXPIRED: "トークンが期限切れです",
 };
 
 export const TASK_ERROR_MESSAGE = {

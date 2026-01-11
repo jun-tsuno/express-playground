@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import type { CookieOptions } from "express";
+import { AUTH_ERROR_MESSAGE } from "@/utils/errors.js";
 
 // トークン設定
 const TOKEN_CONFIG = {
@@ -32,17 +33,44 @@ export const generateRefreshToken = (userId: string, email: string): string => {
 	);
 };
 
+type VerifyTokenResult =
+	| { success: true; payload: JwtPayload }
+	| { success: false; error: string };
+
 // アクセストークンの検証
-export const verifyAccessToken = (token: string): JwtPayload => {
-	return jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+export const verifyAccessToken = (token: string): VerifyTokenResult => {
+	try {
+		const payload = jwt.verify(
+			token,
+			process.env.JWT_SECRET as string
+		) as JwtPayload;
+
+		return { success: true, payload };
+	} catch (error) {
+		if (error instanceof jwt.TokenExpiredError) {
+			return { success: false, error: AUTH_ERROR_MESSAGE.EXPIRED };
+		}
+
+		return { success: false, error: AUTH_ERROR_MESSAGE.DEFAULT };
+	}
 };
 
 // リフレッシュトークンの検証
-export const verifyRefreshToken = (refreshToken: string): JwtPayload => {
-	return jwt.verify(
-		refreshToken,
-		process.env.REFRESH_TOKEN_SECRET as string
-	) as JwtPayload;
+export const verifyRefreshToken = (refreshToken: string): VerifyTokenResult => {
+	try {
+		const payload = jwt.verify(
+			refreshToken,
+			process.env.REFRESH_TOKEN_SECRET as string
+		) as JwtPayload;
+
+		return { success: true, payload };
+	} catch (error) {
+		if (error instanceof jwt.TokenExpiredError) {
+			return { success: false, error: AUTH_ERROR_MESSAGE.EXPIRED };
+		}
+
+		return { success: false, error: AUTH_ERROR_MESSAGE.DEFAULT };
+	}
 };
 
 export const getCookieOptions = ({
