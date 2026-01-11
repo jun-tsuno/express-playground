@@ -4,6 +4,7 @@ export const AUTH_ERROR_MESSAGE = {
 	CONFLICT: "ユーザーが既に存在します",
 	NOT_FOUND: "ユーザーが見つかりません",
 	EXPIRED: "トークンが期限切れです",
+	INVALID_REFRESH_TOKEN: "無効なリフレッシュトークンです",
 };
 
 export const TASK_ERROR_MESSAGE = {

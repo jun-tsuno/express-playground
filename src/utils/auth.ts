@@ -69,7 +69,7 @@ export const verifyRefreshToken = (refreshToken: string): VerifyTokenResult => {
 			return { success: false, error: AUTH_ERROR_MESSAGE.EXPIRED };
 		}
 
-		return { success: false, error: AUTH_ERROR_MESSAGE.DEFAULT };
+		return { success: false, error: AUTH_ERROR_MESSAGE.INVALID_REFRESH_TOKEN };
 	}
 };
 

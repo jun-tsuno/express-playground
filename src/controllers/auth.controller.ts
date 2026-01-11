@@ -4,6 +4,7 @@ import {
 	registerService,
 	loginService,
 	refreshService,
+	logoutService,
 } from "@/services/auth.service.js";
 import type { ApiResponse } from "@/types/response.js";
 import { UnauthorizedError, AUTH_ERROR_MESSAGE } from "@/utils/errors.js";
@@ -54,7 +55,7 @@ export const postRefresh = async (
 		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.DEFAULT);
 	}
 
-	const { token, refreshToken } = refreshService(oldRefreshToken);
+	const { token, refreshToken } = await refreshService(oldRefreshToken);
 
 	// httpOnlyにcookieを設定
 	res.cookie(tokenCookie.key, token, tokenCookie.options);
@@ -70,9 +71,11 @@ export const postRefresh = async (
 
 // ログアウト
 export const postLogout = async (
-	_req: Request,
+	req: Request,
 	res: Response
 ): Promise<void> => {
+	await logoutService(req.cookies?.refreshToken);
+
 	res.clearCookie(tokenCookie.key);
 	res.clearCookie(refreshTokenCookie.key);
 

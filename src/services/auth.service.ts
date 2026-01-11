@@ -9,6 +9,7 @@ import {
 	generateRefreshToken,
 	verifyRefreshToken,
 } from "@/utils/auth.js";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -51,17 +52,26 @@ export const loginService = async (
 	const token = generateAccessToken(user.id, user.email);
 	const refreshToken = generateRefreshToken(user.id, user.email);
 
+	// リフレッシュトークンをDBに保存
+	await userRepository.update(user.id, { refreshToken });
+
 	return { token, refreshToken };
 };
 
 // リフレッシュトークンの検証と生成
-export const refreshService = (
+export const refreshService = async (
 	refreshToken: string
-): { token: string; refreshToken: string } => {
+): Promise<{ token: string; refreshToken: string }> => {
+	// トークンの検証
 	const result = verifyRefreshToken(refreshToken);
-
 	if (!result.success) {
 		throw new UnauthorizedError(result.error);
+	}
+
+	// ユーザーの検証
+	const user = await userRepository.findOneBy({ id: result.payload.userId });
+	if (!user || !user.refreshToken || user.refreshToken !== refreshToken) {
+		throw new UnauthorizedError(AUTH_ERROR_MESSAGE.INVALID_REFRESH_TOKEN);
 	}
 
 	const token = generateAccessToken(
@@ -73,5 +83,19 @@ export const refreshService = (
 		result.payload.email
 	);
 
+	await userRepository.update(result.payload.userId, {
+		refreshToken: newRefreshToken,
+	});
+
 	return { token, refreshToken: newRefreshToken };
+};
+
+// ログアウト
+export const logoutService = async (refreshToken: string): Promise<void> => {
+	if (!refreshToken) return;
+
+	const decoded = jwt.decode(refreshToken) as JwtPayload | null;
+	if (!decoded?.userId) return;
+
+	await userRepository.update(decoded.userId, { refreshToken: null });
 };

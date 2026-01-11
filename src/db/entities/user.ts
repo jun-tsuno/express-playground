@@ -20,6 +20,9 @@ export class User {
 	@Column("text")
 	passwordHash: string;
 
+	@Column("text", { nullable: true })
+	refreshToken: string | null;
+
 	@CreateDateColumn()
 	createdAt: Date;
 
