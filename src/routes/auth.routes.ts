@@ -9,7 +9,6 @@ import {
 import {
 	registerValidator,
 	loginValidator,
-	refreshValidator,
 } from "@/validators/auth.validator.js";
 import { validate } from "@/middlewares/validate.middleware.js";
 
@@ -24,7 +23,7 @@ router.post(
 
 router.post("/login", loginValidator, validate, asyncHandler(postLogin));
 
-router.post("/refresh", refreshValidator, validate, asyncHandler(postRefresh));
+router.post("/refresh", asyncHandler(postRefresh));
 
 router.post("/logout", asyncHandler(postLogout));
 
