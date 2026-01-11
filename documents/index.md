@@ -13,7 +13,7 @@ Express/TypeScript を用いて、フロントエンド分離前提の **API サ
 - TypeScript
 - DB: SQLite
 - ORM: TypeORM（マイグレーション含む）
-- 認証: JWT（Bearer + リフレッシュトークン）
+- 認証: JWT（httpOnly cookie + リフレッシュトークン）
 - バリデーション: express-validator
 - ログ: pino 等
 - Lint/Format: ESLint + Prettier
@@ -54,23 +54,26 @@ Express/TypeScript を用いて、フロントエンド分離前提の **API サ
 
 ## API 要件
 
-### 認証（JWT）
+### 認証（JWT + httpOnly cookie）
 
 - `POST /auth/register`
   - email, password を受け取る
   - password はハッシュ化して保存（bcrypt 推奨）
   - パスワード強度: 最小 8 文字以上
   - email 重複は 409 など適切なエラーにする
+  - トークンは発行しない（登録後は別途ログインが必要）
 - `POST /auth/login`
   - email, password を検証
-  - 成功時 JWT（アクセストークン）を返す
-  - リフレッシュトークンも返す
+  - 成功時、httpOnly cookie にトークンを設定
+    - `token`: アクセストークン（1h）
+    - `refreshToken`: リフレッシュトークン（7d）
 - `POST /auth/refresh`
-  - リフレッシュトークンで新しいアクセストークンを発行
+  - cookie のリフレッシュトークンで新しいトークンを発行
+  - 新しいトークンを cookie に設定
 - `POST /auth/logout`
-  - トークンの無効化（ブラックリスト管理など）
+  - cookie をクリア（token, refreshToken）
 - `GET /me`
-  - Bearer トークン必須
+  - cookie のアクセストークン必須
   - 自分のユーザー情報を返す
 
 ### Task CRUD（認証必要）

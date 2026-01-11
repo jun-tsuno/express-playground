@@ -136,9 +136,19 @@ router.get("/:id", asyncHandler(getTask));
 ## トークン認証
 
 アクセストークンとリフレッシュトークンを使用した認証フロー。
+トークンは httpOnly cookie で管理する。
+
+### トークンの種類
+
+| トークン           | cookie名        | 有効期限 | 用途                     |
+| ------------------ | --------------- | -------- | ------------------------ |
+| アクセストークン   | `token`         | 1h       | API 認証                 |
+| リフレッシュトークン | `refreshToken` | 7d       | アクセストークンの再発行 |
+
+### ログイン時の処理
 
 ```
-POST /auth/login または POST /auth/register
+POST /auth/login
     │
     ▼
 ┌─────────────────────────────────┐
@@ -154,18 +164,30 @@ POST /auth/login または POST /auth/register
 └─────────────────────────────────┘
     │
     ▼
-レスポンス: { token, refreshToken }
+┌─────────────────────────────────┐
+│  httpOnly cookie に設定          │
+│  ・token                        │
+│  ・refreshToken                 │
+└─────────────────────────────────┘
+    │
+    ▼
+レスポンス: { success: true, data: { message: "ログインしました" } }
 ```
+
+※ 新規登録（POST /auth/register）ではトークンを発行しない。登録後は別途ログインが必要。
+
+### API リクエスト時の認証フロー
 
 ```
 Client                              Server
    │                                   │
    │  GET /tasks                       │
-   │  Authorization: Bearer <token>    │
+   │  Cookie: token=xxx                │
    │──────────────────────────────────>│
    │                                   │
    │                          ┌────────┴────────┐
    │                          │ authMiddleware   │
+   │                          │ cookie から      │
    │                          │ トークン検証      │
    │                          └────────┬────────┘
    │                                   │
@@ -192,12 +214,12 @@ Client                              Server
    │<──────────────────────────────────│
    │                                   │
    │  POST /auth/refresh               │
-   │  { refreshToken: "..." }          │
+   │  Cookie: refreshToken=xxx         │
    │──────────────────────────────────>│
    │                                   │
    │                          ┌────────┴────────┐
    │                          │ refreshService   │
-   │                          │ リフレッシュ      │
+   │                          │ cookie から      │
    │                          │ トークン検証      │
    │                          └────────┬────────┘
    │                                   │
@@ -212,7 +234,8 @@ Client                              Server
    │                    （ローテーション）
    │                           │
    │  200 OK                   │
-   │  { token, refreshToken }  │
+   │  Set-Cookie: token=xxx    │
+   │  Set-Cookie: refreshToken │
    │<──────────────────────────│
    │                                   │
    │  GET /tasks (新トークン)           │
@@ -222,4 +245,24 @@ Client                              Server
    │<──────────────────────────────────│
 ```
 
+### ログアウトの処理
+
+```
+POST /auth/logout
+    │
+    ▼
+┌─────────────────────────────────┐
+│  cookie をクリア                 │
+│  ・token                        │
+│  ・refreshToken                 │
+└─────────────────────────────────┘
+    │
+    ▼
+レスポンス: { success: true, data: { message: "ログアウトしました" } }
+```
+
+### トークンローテーション
+
 リフレッシュ時に新しいリフレッシュトークンも発行する（ローテーション）。
+
+※ 現在の実装ではリフレッシュトークンを DB に保存していないため、古いトークンは有効期限内であれば引き続き使用可能。

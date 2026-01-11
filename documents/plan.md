@@ -43,11 +43,11 @@
 
 ## ステップ 5: 認証機能実装
 
-- [ ] 認証サービス（register, login, refresh, logout）
+- [x] 認証サービス（register, login, refresh, logout）
   - [x] register
   - [x] login
   - [x] refresh
-  - [ ] logout
+  - [x] logout
 - [ ] 認証リポジトリ（任意）
 - [x] 認証コントローラー
 - [x] 認証ルート
@@ -84,15 +84,15 @@
 
 ## ステップ 9: 認証セキュリティ強化
 
-- [ ] トークンの受け渡しを cookie ベース（httpOnly）に変更
-  - [ ] cookie-parser ミドルウェア導入
-  - [ ] login/register でトークンを httpOnly cookie に設定
-  - [ ] auth.middleware でトークンを cookie から取得するよう変更
-  - [ ] CORS の credentials 設定を有効化
+- [x] トークンの受け渡しを cookie ベース（httpOnly）に変更
+  - [x] cookie-parser ミドルウェア導入
+  - [x] login でトークンを httpOnly cookie に設定
+  - [x] auth.middleware でトークンを cookie から取得するよう変更
+  - [x] CORS の credentials 設定を有効化
 - [ ] リフレッシュトークンの DB 管理
   - [ ] User エンティティに refreshToken カラムを追加
   - [ ] マイグレーション作成・実行
-  - [ ] login/register 時に refreshToken を DB に保存
+  - [ ] login 時に refreshToken を DB に保存
   - [ ] refresh 時に DB のトークンと照合
   - [ ] logout 時に DB の refreshToken を削除（無効化）
 
