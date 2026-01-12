@@ -26,12 +26,12 @@ export const errorHandler = (
 		return;
 	}
 
-	// 想定外エラー → InternalServerErrorに変換
-	console.error("Unexpected error:", error);
+	if (process.env.NODE_ENV !== "production") {
+		console.error("Unexpected error:", error);
+	}
 
-	const internalError = new InternalServerError(
-		process.env.NODE_ENV === "production" ? undefined : error.message
-	);
+	// 想定外エラー → InternalServerErrorに変換
+	const internalError = new InternalServerError(error.message);
 
 	const response: ApiResponse<never> = {
 		success: false,
