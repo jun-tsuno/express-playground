@@ -1,4 +1,4 @@
-# Express + TypeScript API サーバー開発 要件定義
+# Express + TypeScript API サーバー開発
 
 ## 目的
 
