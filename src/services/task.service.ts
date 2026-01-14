@@ -2,11 +2,31 @@ import { AppDataSource } from "@/db/data-source.js";
 import { Task } from "@/db/entities/task.js";
 import { NotFoundError, TASK_ERROR_MESSAGE } from "@/utils/errors.js";
 import type { CreateTaskDto, UpdateTaskDto } from "@/dto/task.dto.js";
+import type { Pagination } from "@/types/response.js";
 
 const taskRepository = AppDataSource.getRepository(Task);
 
-export const getTasksService = async (userId: string): Promise<Task[]> => {
-	return await taskRepository.find({ where: { ownerId: userId } });
+export const getTasksService = async (
+	userId: string,
+	page: number,
+	limit: number,
+	order: "ASC" | "DESC"
+): Promise<{ tasks: Task[]; pagination: Pagination }> => {
+	const [tasks, total] = await taskRepository.findAndCount({
+		where: { ownerId: userId },
+		skip: (page - 1) * limit,
+		take: limit,
+		order: { createdAt: order },
+	});
+
+	const pagination = {
+		page,
+		limit,
+		total,
+		totalPages: Math.ceil(total / limit),
+	};
+
+	return { tasks, pagination };
 };
 
 export const getTaskByIdService = async (

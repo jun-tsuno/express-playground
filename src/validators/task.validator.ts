@@ -1,4 +1,22 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
+
+// 一覧取得
+export const getTasksValidator = [
+	query("page")
+		.optional()
+		.isInt({ min: 1 })
+		.withMessage("ページは1以上です")
+		.toInt(),
+	query("limit")
+		.optional()
+		.isInt({ min: 1, max: 50 })
+		.withMessage("1〜50の間で指定してください")
+		.toInt(),
+	query("order")
+		.optional()
+		.isIn(["ASC", "DESC"])
+		.withMessage("ソート順はASCまたはDESCで入力してください"),
+];
 
 // 作成
 export const createTaskValidator = [

@@ -12,15 +12,17 @@ interface ErrorResponse {
 	};
 }
 
+export interface Pagination {
+	page: number;
+	limit: number;
+	total: number;
+	totalPages: number;
+}
+
 interface PaginatedResponse<T> {
 	success: true;
 	data: T[];
-	meta: {
-		page: number;
-		limit: number;
-		total: number;
-		totalPages: number;
-	};
+	meta: Pagination;
 }
 
 /**

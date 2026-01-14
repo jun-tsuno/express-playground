@@ -10,6 +10,7 @@ import { asyncHandler } from "@/utils/async-handler.js";
 import { validate } from "@/middlewares/validate.middleware.js";
 import { checkTokenMiddleware } from "@/middlewares/auth.middleware.js";
 import {
+	getTasksValidator,
 	createTaskValidator,
 	updateTaskValidator,
 	taskIdValidator,
@@ -19,7 +20,7 @@ const router: RouterType = Router();
 
 router.use(checkTokenMiddleware);
 
-router.get("/", asyncHandler(getTasks));
+router.get("/", getTasksValidator, validate, asyncHandler(getTasks));
 router.post("/", createTaskValidator, validate, asyncHandler(postTask));
 router.get("/:id", taskIdValidator, validate, asyncHandler(getTask));
 router.patch("/:id", updateTaskValidator, validate, asyncHandler(patchTask));

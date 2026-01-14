@@ -1,4 +1,4 @@
-import type { Response, Request } from "express";
+import type { Response } from "express";
 import {
 	getTasksService,
 	getTaskByIdService,
@@ -7,6 +7,7 @@ import {
 	deleteTaskService,
 } from "@/services/task.service.js";
 import type {
+	GetTasksRequest,
 	CreateTaskRequest,
 	UpdateTaskRequest,
 	GetTaskRequest,
@@ -16,14 +17,27 @@ import type { ApiResponse } from "@/types/response.js";
 import type { Task } from "@/db/entities/task.js";
 
 // タスク一覧を取得
-export const getTasks = async (req: Request, res: Response): Promise<void> => {
+export const getTasks = async (
+	req: GetTasksRequest,
+	res: Response
+): Promise<void> => {
 	if (!req.user) return;
 
-	const tasks = await getTasksService(req.user);
+	const page = Number(req.query.page) || 1;
+	const limit = Number(req.query.limit) || 10;
+	const order = req.query.order || "DESC";
+
+	const { tasks, pagination } = await getTasksService(
+		req.user,
+		page,
+		limit,
+		order
+	);
 
 	const response: ApiResponse<Task[]> = {
 		success: true,
 		data: tasks,
+		meta: pagination,
 	};
 
 	res.status(200).json(response);
