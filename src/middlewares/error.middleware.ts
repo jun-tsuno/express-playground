@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { AppError, InternalServerError } from "@/utils/errors.js";
 import type { ApiResponse } from "@/types/response.js";
+import { logger } from "@/utils/logger.js";
 
 /**
  * グローバルエラーハンドリングミドルウェア
@@ -26,9 +27,8 @@ export const errorHandler = (
 		return;
 	}
 
-	if (process.env.NODE_ENV !== "production") {
-		console.error("Unexpected error:", error);
-	}
+	// 想定外エラーはログ出力（対応が必要）
+	logger.error(error, "想定外エラー");
 
 	// 想定外エラー → InternalServerErrorに変換
 	const internalError = new InternalServerError(error.message);

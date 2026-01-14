@@ -4,10 +4,12 @@ import { errorHandler } from "@/middlewares/error.middleware.js";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { httpLogger } from "@/utils/logger.js";
 
 const app: Express = express();
 
 // ミドルウェア設定
+app.use(httpLogger);
 app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());

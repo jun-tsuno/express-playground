@@ -1,6 +1,5 @@
 # 残タスク
 
-- [ ] logger（pino）
 - [ ] テスト実装
 
 - [ ] Rate Limit

@@ -7,3 +7,4 @@ tmp/
 temp/
 *.sqlite
 .env
+logs/
