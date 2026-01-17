@@ -17,6 +17,7 @@ import {
 	deleteTask,
 } from "src/controllers/task.controller";
 import * as taskService from "src/services/task.service";
+import { NotFoundError, ValidationError } from "src/utils/errors";
 
 vi.mock("src/services/task.service", () => ({
 	getTasksService: vi.fn(),
@@ -109,6 +110,21 @@ describe("src/controllers/task.controller", () => {
 				})
 			).toBe(true);
 		});
+
+		test("should throw NotFoundError when task not found", async () => {
+			const notFoundError = new NotFoundError("タスクが見つかりません");
+			vi.mocked(taskService.getTasksService).mockRejectedValue(notFoundError);
+
+			const req = mockReq({
+				user: "user-has-no-tasks",
+			}) as unknown as GetTasksRequest;
+			const res = mockRes();
+
+			await expect(getTasks(req, res)).rejects.toThrow(notFoundError);
+			await expect(getTasks(req, res)).rejects.toThrow(
+				"タスクが見つかりません"
+			);
+		});
 	});
 
 	describe("getTask", () => {
@@ -136,6 +152,24 @@ describe("src/controllers/task.controller", () => {
 					data: mockTask,
 				})
 			).toBe(true);
+		});
+
+		test("should throw NotFoundError when task not found", async () => {
+			const notFoundError = new NotFoundError("タスクが見つかりません");
+			vi.mocked(taskService.getTaskByIdService).mockRejectedValue(
+				notFoundError
+			);
+
+			const req = mockReq({
+				params: {
+					id: "invalid-task-id",
+				},
+				user: "test-user-id",
+			}) as unknown as GetTaskRequest;
+			const res = mockRes();
+
+			await expect(getTask(req, res)).rejects.toThrow(notFoundError);
+			await expect(getTask(req, res)).rejects.toThrow("タスクが見つかりません");
 		});
 	});
 
@@ -170,6 +204,24 @@ describe("src/controllers/task.controller", () => {
 					data: mockTask,
 				})
 			).toBe(true);
+		});
+
+		test("should throw ValidationError when invalid input", async () => {
+			const validationError = new ValidationError("入力が無効です");
+			vi.mocked(taskService.createTaskService).mockRejectedValue(
+				validationError
+			);
+
+			const req = mockReq({
+				body: {
+					title: "",
+				},
+				user: "test-user-id",
+			}) as unknown as CreateTaskRequest;
+			const res = mockRes();
+
+			await expect(postTask(req, res)).rejects.toThrow(validationError);
+			await expect(postTask(req, res)).rejects.toThrow("入力が無効です");
 		});
 	});
 
