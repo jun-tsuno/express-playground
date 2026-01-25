@@ -81,7 +81,7 @@ export const getCookieOptions = ({
 	return {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
-		sameSite: "strict",
+		sameSite: "none",
 		maxAge: maxAgeSec * 1000, // ミリ秒に変換
 	};
 };
